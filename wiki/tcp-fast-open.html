@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Netty.docs: TCP Fast Open</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="../images/favicon.ico" rel="shortcut icon">
+<link href="//feeds.feedburner.com/netty_project" rel="alternate" title="News Feed" type="application/rss+xml">
+<style>
+  body {
+    padding-top: 60px;
+  }
+</style>
+<link href="../lib/bootstrap/3.2.0/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css">
+<link href="../lib/font-awesome/4.0.3/css/font-awesome.min.css" media="screen" rel="stylesheet" type="text/css">
+<script src="../lib/sh/scripts/shCore.js" type="text/javascript"></script>
+<script src="../lib/sh/scripts/shBrushXml.js" type="text/javascript"></script>
+<link href="../lib/sh/styles/shCore.css" rel="stylesheet" type="text/css">
+<link href="../lib/sh/styles/shThemeDefault.css" rel="stylesheet" type="text/css">
+<link href="../lib/common.css" rel="stylesheet" type="text/css">
+<script src="../lib/common.js" type="text/javascript"></script>
+<!--[if lt IE 9]>
+<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js" type="text/javascript"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.js" type="text/javascript"></script>
+<![endif]-->
+</head>
+<body>
+<a class="sr-only" href="#content" id="top">Skip navigation</a>
+<nav class="navbar navbar-default navbar-fixed-top hidden-print" id="header" role="navigation">
+<div class="container">
+<div class="navbar-header">
+<button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" type="button">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="../index.html">
+<span class="navbar-brand-logo"></span>
+Netty project
+</a>
+</div>
+<div class="navbar-collapse collapse">
+<ul class="nav navbar-nav">
+<li class="dropdown">
+<a href="../news/2024/01/12/ohttp-0-0-4-Final.html">
+News
+</a>
+<ul class="dropdown-menu">
+<li>
+<a href="../news/index.html">
+<i class="fa fa-archive"></i>
+Archive
+</a>
+</li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="../downloads.html">
+Downloads
+</a>
+<ul class="dropdown-menu">
+<li>
+<a href="https://github.com/netty/netty/archive/refs/tags/netty-5.0.0.Alpha5.tar.gz">
+<i class="fa fa-cloud-download"></i>
+5.0.0.Alpha5
+<small>&dash; 28-Sep-2022</small>
+</a>
+</li>
+<li>
+<a href="https://github.com/netty/netty/archive/refs/tags/netty-4.1.104.Final.tar.gz">
+<i class="fa fa-cloud-download"></i>
+4.1.104.Final
+<small>&dash; 15-Dec-2023</small>
+</a>
+</li>
+<li>
+<a href="https://github.com/netty/netty/archive/refs/tags/netty-4.0.56.Final.tar.gz">
+<i class="fa fa-cloud-download"></i>
+4.0.56.Final
+<small>&dash; 05-Feb-2018</small>
+</a>
+</li>
+<li>
+<a href="https://github.com/netty/netty/archive/refs/tags/netty-3.10.6.Final.tar.gz">
+<i class="fa fa-cloud-download"></i>
+3.10.6.Final
+<small>&dash; 29-Jun-2016</small>
+</a>
+</li>
+<li>
+<a href="https://www.tldrlegal.com/l/APACHE2">
+<i class="fa fa-gavel"></i>
+Apache License 2.0
+</a>
+</li>
+<li>
+<a href="https://github.com/netty/netty/releases">
+<i class="fa fa-archive"></i>
+Previous Releases
+</a>
+</li>
+<li>
+<a href="https://oss.sonatype.org/content/repositories/snapshots/io/netty/">
+<i class="fa fa-flask"></i>
+Nightly Builds
+</a>
+</li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="../wiki/index.html">
+Documentation
+</a>
+<ul class="dropdown-menu">
+<li>
+<a href="../wiki/user-guide.html">
+<i class="fa fa-book"></i>
+User guide
+</a>
+</li>
+<li>
+<a href="../5.0/api/index.html">
+<i class="fa fa-file-text"></i>
+Javadoc - 5.0
+</a>
+</li>
+<li>
+<a href="../4.1/api/index.html">
+<i class="fa fa-file-text"></i>
+Javadoc - 4.1
+</a>
+</li>
+<li>
+<a href="../4.0/api/index.html">
+<i class="fa fa-file-text"></i>
+Javadoc - 4.0
+</a>
+</li>
+<li>
+<a href="../3.10/api/index.html">
+<i class="fa fa-file-text"></i>
+Javadoc - 3.10
+</a>
+</li>
+<li>
+<a href="../wiki/all-documents.html">
+<i class="fa fa-list"></i>
+All Documents
+</a>
+</li>
+<li>
+<a href="../wiki/related-articles.html">
+<i class="fa fa-bookmark"></i>
+Related Articles
+</a>
+</li>
+<li class="hidden-xs" id="bookpromo-dropdown">
+<a href="https://www.manning.com/maurer/">
+<img src="../images/netty-in-action.gif">
+<br>
+<small>
+Use code <strong>mlnettyco</strong>
+<br>
+for a 37% discount!
+</small>
+</a>
+</li>
+</ul>
+</li>
+<li class="dropdown">
+<a href="../community.html">
+Get Involved
+</a>
+<ul class="dropdown-menu">
+<li>
+<a href="https://github.com/netty/netty">
+<i class="fa fa-github-square"></i>
+Github
+</a>
+</li>
+<li>
+<a href="https://stackoverflow.com/questions/tagged/netty">
+<i class="fa fa-stack-overflow"></i>
+StackOverflow
+</a>
+</li>
+<li>
+<a href="https://twitter.com/netty_project">
+<i class="fa fa-twitter-square"></i>
+@netty_project
+</a>
+</li>
+<li>
+<a href="../wiki/developer-guide.html">
+<i class="fa fa-cogs"></i>
+Developer Guide
+</a>
+</li>
+<li>
+<a href="https://discord.gg/GkGzzdQM5d">
+<i class="fa fa-comment"></i>
+Discord Server
+</a>
+</li>
+<li>
+<a href="../sponsor/thanks.html">
+<i class="fa fa-usd"></i>
+Sponsors
+</a>
+</li>
+<li>
+<a href="../wiki/adopters.html">
+<i class="fa fa-users"></i>
+Adopters
+</a>
+</li>
+<li>
+<a href="../wiki/related-projects.html">
+<i class="fa fa-chain"></i>
+Related Projects
+</a>
+</li>
+</ul>
+</li>
+<li class="visible-xs" id="bookpromo-nav">
+<a href="https://www.manning.com/maurer/">
+<img src="../images/netty-in-action.gif">
+<br>
+<small>
+Use code <strong>mlnettyco</strong>
+<br>
+for a 37% discount!
+</small>
+</a>
+</li>
+<li>
+<a href="https://feeds.feedburner.com/netty_project">
+<i class="fa fa-rss"></i>
+</a>
+</li>
+</ul>
+<form action="../search.html" class="navbar-form navbar-right hidden-sm" method="GET" onsubmit="return validateGlobalSearchQuery()" role="search">
+<div class="form-group">
+<input class="search-query form-control" id="global-search-query" name="q" placeholder="Search" type="text">
+</div>
+</form>
+</div>
+</div>
+</nav>
+<div id="content">
+<div class="container">
+<div class="wiki-item">
+<h1>TCP Fast Open</h1>
+<div class="alert alert-info">
+Did you know this page is automatically generated from
+<a href="https://github.com/netty/netty/wiki/TCP-Fast-Open">a Github Wiki page?</a>
+You can improve it by yourself
+<a href="https://github.com/netty/netty/wiki/TCP-Fast-Open">here!</a>
+</div>
+<div class="row">
+<div class="col-md-9">
+<div id="wiki-body" class="gollum-markdown-content">
+<div class="markdown-body">
+<h2 id="wiki-h2-1">
+<a id="user-content-preface" class="anchor" aria-hidden="true" tabindex="-1" href="#preface"><svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a>Preface</h2>
+<p>TCP Fast Open, or TFO for short, is an extension to the TCP protocol that allow a small amount of data to be sent alongside the initial SYN packet, when a TCP connection is being established.
+This can save round-trips and reduce response time in certain cases.</p>
+<p>TFO cannot always be used, however, because it changes how TCP behave:
+The receiving end might see this data duplicated due to retransmission of the SYN packet.
+For this reason, TFO must only be used when the data in the initial packet will be processed idempotently.
+Whether this is the case, depends on the protocol and the application.</p>
+<p>One important use case where idempotency is guaranteed, is the TLS Client Hello message.
+This is the first message that a client sends to a server, to initiate the TLS handshake.
+This saves a round-trip when establishing TLS connections.
+Since version <code>4.1.61.Final</code>, the <code>SslHandler</code> in Netty will automatically take advantage of TFO when available.
+Specifically, server-side and client-side TFO is only supported on the epoll transport, and it requires support to be enabled in the Linux kernel.
+Since version <code>4.1.67.Final</code>, TCP FastOpen will also be supported for client-side connections on the <code>kqueue</code> transport.</p>
+<h2 id="wiki-h2-2">
+<a id="user-content-enabling-tfo" class="anchor" aria-hidden="true" tabindex="-1" href="#enabling-tfo"><svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a>Enabling TFO</h2>
+<p>First, TFO needs to be supported and enabled in the operating system.
+On <em>MacOS</em>, this is enabled by default.
+On <em>Linux</em>, this is controlled with the <code>/proc/sys/net/ipv4/tcp_fastopen</code> file.
+The file may contain one of the following values:</p>
+<ol start="0">
+<li>TFO is not enabled.</li>
+<li>TFO is enabled for outgoing connections (clients).</li>
+<li>TFO is enabled for incoming connections (servers).</li>
+<li>TFO is enabled for both clients and servers.</li>
+</ol>
+<p>The setting can be changed by writing the derised configuration value to the file as the <code>root</code> user.</p>
+<p>The second step is to enable TFO in Netty.
+This is done in different ways for servers and clients.</p>
+<p>For servers, you set the <code>ChannelOption.TCP_FASTOPEN</code> as an option on the <code>ServerBootstrap</code>:</p>
+<div class="highlight highlight-source-java notranslate position-relative overflow-auto" data-snippet-clipboard-copy-content="ServerBootstrap sb = ...;
+sb.option(ChannelOption.TCP_FASTOPEN, maxPendingFastOpen);"><pre><span class="pl-smi">ServerBootstrap</span> <span class="pl-s1">sb</span> = ...;&#x000A;<span class="pl-s1">sb</span>.<span class="pl-en">option</span>(<span class="pl-smi">ChannelOption</span>.<span class="pl-c1">TCP_FASTOPEN</span>, <span class="pl-s1">maxPendingFastOpen</span>);</pre></div>
+<p>And that's all it takes.
+The option specifies how many fast-open requests can be pending on the socket at any one time.
+This limits the system resources that can be tied up in fast-open payloads for connections that haven't been established.
+See the <a href="https://tools.ietf.org/html/rfc7413#appendix-A.2" rel="nofollow">Passive Open appendix to RFC 7413</a> for reference.</p>
+<p>For clients, the situation is a little more involved.
+You first set the <code>ChannelOption.TCP_FASTOPEN_CONNECT</code> option to <code>true</code> on <code>Bootstrap</code>:</p>
+<div class="highlight highlight-source-java notranslate position-relative overflow-auto" data-snippet-clipboard-copy-content="Bootstrap cb = ...;
+cb.option(ChannelOption.TCP_FASTOPEN_CONNECT, true);"><pre><span class="pl-smi">Bootstrap</span> <span class="pl-s1">cb</span> = ...;&#x000A;<span class="pl-s1">cb</span>.<span class="pl-en">option</span>(<span class="pl-smi">ChannelOption</span>.<span class="pl-c1">TCP_FASTOPEN_CONNECT</span>, <span class="pl-c1">true</span>);</pre></div>
+<p>Then, you also have to decide what data is allowed to be sent alongside the SYN packet, taking into consideration that it may arrive multiple times due to retransmission.
+This data then needs to be placed in the channels outbound buffer <em>before</em> the channel is connected.
+To obtain a channel before it's connected, we call <code>register</code>.
+Here is an example of what this can look like:</p>
+<div class="highlight highlight-source-java notranslate position-relative overflow-auto" data-snippet-clipboard-copy-content="Bootstrap cb = new Bootstrap();
+cb.option(ChannelOption.TCP_FASTOPEN_CONNECT, true);
+// ...set handler, etc...
+Channel channel = cb.register().sync().channel(); // Get unconnected channel.
+
+ByteBuf fastOpenData = ...;
+ByteBuf normalData = ...;
+
+channel.write(fastOpenData);           // Write TFO data.
+channel.connect(remoteAddress).sync(); // Establish connection (flushes TFO data).
+channel.write(normalData);             // TCP connection works like normal now."><pre><span class="pl-smi">Bootstrap</span> <span class="pl-s1">cb</span> = <span class="pl-k">new</span> <span class="pl-smi">Bootstrap</span>();&#x000A;<span class="pl-s1">cb</span>.<span class="pl-en">option</span>(<span class="pl-smi">ChannelOption</span>.<span class="pl-c1">TCP_FASTOPEN_CONNECT</span>, <span class="pl-c1">true</span>);&#x000A;<span class="pl-c">// ...set handler, etc...</span>&#x000A;<span class="pl-smi">Channel</span> <span class="pl-s1">channel</span> = <span class="pl-s1">cb</span>.<span class="pl-en">register</span>().<span class="pl-en">sync</span>().<span class="pl-en">channel</span>(); <span class="pl-c">// Get unconnected channel.</span>&#x000A;&#x000A;<span class="pl-smi">ByteBuf</span> <span class="pl-s1">fastOpenData</span> = ...;&#x000A;<span class="pl-smi">ByteBuf</span> <span class="pl-s1">normalData</span> = ...;&#x000A;&#x000A;<span class="pl-s1">channel</span>.<span class="pl-en">write</span>(<span class="pl-s1">fastOpenData</span>);           <span class="pl-c">// Write TFO data.</span>&#x000A;<span class="pl-s1">channel</span>.<span class="pl-en">connect</span>(<span class="pl-s1">remoteAddress</span>).<span class="pl-en">sync</span>(); <span class="pl-c">// Establish connection (flushes TFO data).</span>&#x000A;<span class="pl-s1">channel</span>.<span class="pl-en">write</span>(<span class="pl-s1">normalData</span>);             <span class="pl-c">// TCP connection works like normal now.</span></pre></div>
+<p>An important aspect about the above: we call <code>connect()</code> on the channel produced by <code>register()</code>.
+We cannot use the <code>Bootstrap.connect()</code> method, because that will create another new channel with its own outbound buffer.</p>
+</div>
+<div id="wiki-footer" class="mt-5 Link--muted wiki-footer">
+<a class="d-block p-3 Link--muted text-center border border-dashed rounded-2" href="_new?wiki%5bname%5d=_footer.html">
+<svg aria-hidden="true" height="16" viewbox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-plus mr-1">
+<path d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z"></path>
+</svg> Add a custom footer
+</a> </div>
+</div></div>
+<div class="toc-container col-md-3 hidden-xs hidden-sm hidden-print" role="complementary">
+<div class="toc well">
+<ul class="nav nav-list nav-stacked">
+<li class="nav-header">Table of Contents
+</li><li>
+<ul class="nav nav-list nav-stacked"><li><a href="#wiki-h3-0" title="Pages 30">Pages 30</a>
+</li></ul></li><li><a href="#wiki-h2-1" title="Preface">Preface</a>
+</li><li><a href="#wiki-h2-2" title="Enabling TFO">Enabling TFO</a>
+</li></ul>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-9">
+<div class="text-right">
+<small>Last retrieved on 12-Jan-2024</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="container">
+<hr>
+<div id="footer">
+<p>
+Copyright &copy; 2024
+<a href="../index.html">The Netty project</a>
+</p>
+</div>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+<script src="../lib/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../lib/common.footer.js" type="text/javascript"></script>
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-95307-5', 'auto');
+ga('require', 'displayfeatures');
+ga('require', 'linkid', 'linkid.js');
+ga('send', 'pageview');
+</script>
+</body>
+</html>
